@@ -1,0 +1,319 @@
+<!--Achtung möglicherweise sollen in Firefox Anpassungen vorgenommen werden, damit die Anzeige richtig funktioniert:
+
+Cross-Origin Resource Sharing (CORS) soll wie hier angepasst werden:
+https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?locale=EN_US
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Visualization for Apple</title>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.21/jquery.csv.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.1.0/plotly.min.js"></script>
+</head>
+
+<body>
+    <div id="title" style="width: 800px; height: 200px; padding: 10px; position: relative; margin: auto;">
+        <h1>Datenvisualisierung mithilfe von Plotly*</h1>
+        <h4>von Pirin Marinov,  Aaron Ährlich, Hatice Schefler</h4>
+        <h4>Datenbanksyseme, Übung 10</h4>
+        <h4>Tutor: A. Rudolph</h4>
+    </div>
+
+    <div id="plotGDP" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotCO2" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotPop" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotGrowth" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotWHIRank" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotWHIScore" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotWHILE" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    
+    <div id="sources" style="width: 800px; height: 100px; padding: 0px; position: relative; margin: auto;">
+        <h4>*Quellen: </h4>
+        <ul>
+            <li><a href="https://plotly.com/javascript/line-charts">Plotly Line Charts</a></li>
+        </ul>
+    </div>
+
+</body>
+
+<script>
+    //wird nach Daten angepasst
+    //GDP - CO2 - Population Growth - Population Total - WHI-
+    //info = "World Happiness Index Rank";
+    info = "World Happiness Index Rank";
+    
+    var cntries = new Array;
+    var yrs = ["2015", "2016", "2017", "2018", "2019"];
+    //var yrs = new Array;
+    var valsGDP = new Array;
+    var valsPopGrowth = new Array;
+    var valsPopul = new Array;
+    var valsWHIRank = new Array;
+    var valsWHIScore = new Array;
+    var valsWHILife = new Array;
+    var valsCO2 = new Array;
+    var dataGDP = new Array;
+    var dataCO2 = new Array;
+    var PopGrowth = new Array;
+    var Popul = new Array;
+    var WHIRank = new Array;
+    var WHIScore = new Array;
+    var WHILife = new Array;
+    
+    //User wird selber die countries angeben
+    function getCountries()
+    {
+        var list = prompt("Please enter the countries whose data you want to compare", "e.g. United Kingdom, India");
+        if (list != null)
+        {
+            cntries = list.split(", ");
+            
+            console.log(cntries);
+        }
+    }
+    getCountries();
+    //die Funktion wird Listen mit den Daten füllen
+    function fillData(val_type, type, data) {
+                
+        for (var j = 0; j < data.length; j++) {
+            curr = data[j]["Country"];
+            if (cntries.includes(curr))
+            {
+                ind = cntries.indexOf(curr);
+                var newVals = data[j][type]; 
+                var yrVals = data[j][" Year"];
+                
+                if (typeof val_type[ind] == "undefined")
+                {
+                    val_type[ind] = [];
+                }
+                        
+                val_type[ind].push(newVals);
+            }
+        }
+    }
+    
+    function createVariables(dat, vals) 
+    {
+        for (var k = 1; k < (cntries.length + 1); k++ )
+        {
+            this["trace"+ k] = "undefined";
+            dat.push(this["trace"+k]);
+            //eval(str);
+            
+            //Plots dynamisch erstellen: 
+            dat[k-1] = {
+                x: yrs,
+                y: vals[k-1],
+                mode: 'lines+markers',
+                name: cntries[k-1]
+            };
+                    
+        }
+    }
+    
+    //Daten auslesen - GDP
+    $.ajax({
+        type: "GET",
+        url: "gdp_CLEANED-better.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var data = $.csv.toObjects(res);
+            //console.log(data);
+            
+            //je nach Abfrage werden Daten entsprechend angepasst
+  
+            fillData(valsGDP, " Value", data);
+        }
+    });
+    
+    createVariables(dataGDP, valsGDP);
+    var layoutGDP = {
+        title: "Trend of GDP",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotGDP', dataGDP, layoutGDP);
+    //console.log(valsGDP);
+    
+    
+    //Daten auslesen - CO2
+    $.ajax({
+        type: "GET",
+        url: "owid-co2-data_CLEANED.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var data2 = $.csv.toObjects(res);
+            //console.log(data2);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsCO2, " Value", data2);
+        }
+    });
+    createVariables(dataCO2, valsCO2);
+    var layoutCO2 = {
+        title: "Trend of CO2",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotCO2', dataCO2, layoutCO2);
+    //console.log(valsCO2);
+    
+    
+    //Daten auslesen - Population Growth
+    $.ajax({
+        type: "GET",
+        url: "population_CLEANED-better.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var PopGrowth = $.csv.toObjects(res);
+            //console.log(PopGrowth);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsPopGrowth, " Growth", PopGrowth);
+        }
+    });
+    createVariables(PopGrowth, valsPopGrowth);
+    var layoutGrowth = {
+        title: "Trend of Population Growth",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotGrowth', PopGrowth, layoutGrowth);
+    //console.log(valsPopGrowth);
+    
+    //Daten auslesen - Population Total
+    $.ajax({
+        type: "GET",
+        url: "population_CLEANED-better.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var Popul = $.csv.toObjects(res);
+            //console.log(Popul);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsPopul, " Population", Popul);
+        }
+    });
+    createVariables(Popul, valsPopul);
+    var layoutPopul = {
+        title: "Trend of Population Total",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotPop', Popul, layoutPopul);
+    //console.log(valsPopul);
+    
+    
+    //Daten auslesen - WHI Rank
+    $.ajax({
+        type: "GET",
+        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var WHIRank = $.csv.toObjects(res);
+            //console.log(WHIRank);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsWHIRank, " Rank", WHIRank);
+        }
+    });
+    createVariables(WHIRank, valsWHIRank);
+    var layoutRank = {
+        title: "Trend of World Happiness Index Rank",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotWHIRank', WHIRank, layoutRank);
+    //console.log(valsWHIRank);
+    
+    
+    //Daten auslesen - WHI Score
+    $.ajax({
+        type: "GET",
+        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var WHIScore = $.csv.toObjects(res);
+            //console.log(WHIScore);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsWHIScore, " Score", WHIScore);
+        }
+    });
+    createVariables(WHIScore, valsWHIScore);
+    var layoutScore = {
+        title: "Trend of World Happiness Index Score",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotWHIScore', WHIScore, layoutScore);
+    //console.log(valsWHIScore);
+    
+    
+    //Daten auslesen - WHI Life Expectancy
+    $.ajax({
+        type: "GET",
+        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        dataType: "text",
+        async: false,
+        success: (res) => {
+            var WHILife = $.csv.toObjects(res);
+            //console.log(WHILife);
+            //je nach Abfrage werden Daten entsprechend angepasst
+            
+            fillData(valsWHILife, " Life Expectancy", WHILife);
+        }
+    });
+    createVariables(WHILife, valsWHILife);
+    var layoutLife = {
+        title: "Trend of World Happiness Index Life Expectancy",
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: 'Value'
+        }
+    };
+    Plotly.newPlot('plotWHILE', WHILife, layoutLife);
+    //console.log(valsWHILife);
+    
+    
+
+</script>
+
+</html> 
