@@ -14,14 +14,6 @@ def main():
 	
 	gdp_csvfile = open("gdp_CLEANED.csv", newline="\n")
 	gdp_datareader = csv.reader(csvfile, delimiter= ",", quotechar='"')
-	gdp_csvfile = open("gdp_CLEANED.csv", newline="\n")
-	gdp_datareader = csv.reader(csvfile, delimiter= ",", quotechar='"')
-	gdp_csvfile = open("gdp_CLEANED.csv", newline="\n")
-	gdp_datareader = csv.reader(csvfile, delimiter= ",", quotechar='"')
-	gdp_csvfile = open("gdp_CLEANED.csv", newline="\n")
-	gdp_datareader = csv.reader(csvfile, delimiter= ",", quotechar='"')
-	gdp_csvfile = open("gdp_CLEANED.csv", newline="\n")
-	gdp_datareader = csv.reader(csvfile, delimiter= ",", quotechar='"')
 	#next(datareader)#drop first line, containing Table hader
 	#
 	tmp_field =[]
