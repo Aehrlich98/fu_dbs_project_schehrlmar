@@ -1,0 +1,54 @@
+CCREATE TABLE Compare(
+Happy_Country varchar(50)	CHECK (Happy_Country = GDP_Country),
+Happy_Year INT NOT NULL		CHECK (Happy_Year = GDP_Year),
+GDP_Country varchar(50)		CHECK (GDP_Country = CO2_Country),
+GDP_Year INT NOT NULL		CHECK (GDP_Year = CO2_Year),
+CO2_Country varchar(50)		CHECK (CO2_Country = Pop_Country),
+CO2_Year INT NOT NULL		CHECK (CO2_Year = Pop_Year),
+Pop_Country varchar(50)		CHECK (Happy_Country = Pop_Country),
+Pop_Year INT NOT NULL		CHECK (Happy_Year = Pop_Year),
+
+CONSTRAINT fk_happy
+	FOREIGN KEY(Happy_Country, Happy_Year)
+	REFERENCES World_Happiness_Index(CountryName, Year)
+,
+CONSTRAINT fk_gdp
+	FOREIGN KEY(GDP_Country, GDP_Year)
+	REFERENCES GDP(CountryName, Year)
+,
+CONSTRAINT fk_CO2
+	FOREIGN KEY(CO2_Country, CO2_Year)
+	REFERENCES CO2(CountryName, Year)
+,
+CONSTRAINT fk_pop
+	FOREIGN KEY(Pop_Country, Pop_Year)
+	REFERENCES Population(CountryName, Year)
+);
+
+CREATE TABLE CO2 (
+CountryName varchar(50),
+Year INT NOT NULL,
+CO2Emissions DECIMAL, 
+PRIMARY KEY (CountryName, Year)
+);
+CREATE TABLE World_Happiness_Index (
+CountryName varchar(50),
+Year INT NOT NULL,
+HappinessRank INT, 
+HappinessScore DECIMAL,
+HealthyLifeExpectancy DECIMAL, 
+PRIMARY KEY (CountryName, Year)
+);
+CREATE TABLE Population(
+CountryName varchar(50),
+Year INT NOT NULL,
+PopTotal INT,
+PopGrowth DECIMAL,
+PRIMARY KEY (CountryName, Year)
+);
+CREATE TABLE GDP (
+CountryName varchar(50),
+Year INT NOT NULL,
+GDP_Value DECIMAL,
+PRIMARY KEY (CountryName, Year)
+);

@@ -1,0 +1,10 @@
+insert into compare
+select world_happiness_index.countryname, world_happiness_index.year, gdp.countryname, gdp.year, co2.countryname, co2.year, population.countryname, population.year 
+from
+world_happiness_index join gdp on world_happiness_index.countryname=gdp.countryname 
+join co2 on co2.countryname=co2.countryname 
+join population on co2.countryname=population.countryname
+where 
+world_happiness_index.countryname= gdp.countryname and world_happiness_index.year=gdp.year 
+and gdp.countryname= co2.countryname and gdp.year=co2.year 
+and co2.countryname= population.countryname and co2.year=population.year;
