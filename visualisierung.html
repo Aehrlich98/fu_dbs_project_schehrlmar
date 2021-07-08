@@ -18,20 +18,20 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
 <body>
     <div id="title" style="width: 800px; height: 200px; padding: 10px; position: relative; margin: auto;">
         <h1>Datenvisualisierung mithilfe von Plotly*</h1>
-        <h4>von Pirin Marinov,  Aaron Ährlich, Hatice Schefler</h4>
+        <h4>von Pirin Marinov,  Aaron Ehrlich, Hatice Schefler</h4>
         <h4>Datenbanksyseme, Übung 10</h4>
         <h4>Tutor: A. Rudolph</h4>
     </div>
 
-    <div id="plotGDP" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotCO2" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotPop" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotGrowth" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotWHIRank" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotWHIScore" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
-    <div id="plotWHILE" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;">
+    <div id="plotGDP" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotCO2" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotPop" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotGrowth" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotWHIRank" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotWHIScore" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
+    <div id="plotWHILE" style="width: 1000px; height: 500px; padding: 0px; position: relative; margin: auto;"></div>
     
-    <div id="sources" style="width: 800px; height: 100px; padding: 0px; position: relative; margin: auto;">
+    <div id="sources" style="width: 800px; height: 100px; padding: 0px; position: relative; margin: auto;"></div>
         <h4>*Quellen: </h4>
         <ul>
             <li><a href="https://plotly.com/javascript/line-charts">Plotly Line Charts</a></li>
@@ -85,12 +85,12 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     function fillData(val_type, type, data) {
                 
         for (var j = 0; j < data.length; j++) {
-            curr = data[j]["Country"];
+            curr = data[j]["0"];
             if (cntries.includes(curr))
             {
                 ind = cntries.indexOf(curr);
                 var newVals = data[j][type]; 
-                var yrVals = data[j][" Year"];
+                var yrVals = data[j]["1"];
                 
                 if (typeof val_type[ind] == "undefined")
                 {
@@ -124,7 +124,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - GDP
     $.ajax({
         type: "GET",
-        url: "gdp_CLEANED-better.csv",
+        url: "gdp.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -133,7 +133,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             
             //je nach Abfrage werden Daten entsprechend angepasst
   
-            fillData(valsGDP, " Value", data);
+            fillData(valsGDP, "2", data);
         }
     });
     
@@ -154,7 +154,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - CO2
     $.ajax({
         type: "GET",
-        url: "owid-co2-data_CLEANED.csv",
+        url: "co2.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -162,7 +162,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(data2);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsCO2, " Value", data2);
+            fillData(valsCO2, "2", data2);
         }
     });
     createVariables(dataCO2, valsCO2);
@@ -182,7 +182,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - Population Growth
     $.ajax({
         type: "GET",
-        url: "population_CLEANED-better.csv",
+        url: "population.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -190,7 +190,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(PopGrowth);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsPopGrowth, " Growth", PopGrowth);
+            fillData(valsPopGrowth, "3", PopGrowth);
         }
     });
     createVariables(PopGrowth, valsPopGrowth);
@@ -209,7 +209,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - Population Total
     $.ajax({
         type: "GET",
-        url: "population_CLEANED-better.csv",
+        url: "population.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -217,7 +217,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(Popul);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsPopul, " Population", Popul);
+            fillData(valsPopul, "2", Popul);
         }
     });
     createVariables(Popul, valsPopul);
@@ -237,7 +237,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - WHI Rank
     $.ajax({
         type: "GET",
-        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        url: "world_happiness_index.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -245,7 +245,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(WHIRank);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsWHIRank, " Rank", WHIRank);
+            fillData(valsWHIRank, "2", WHIRank);
         }
     });
     createVariables(WHIRank, valsWHIRank);
@@ -265,7 +265,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - WHI Score
     $.ajax({
         type: "GET",
-        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        url: "world_happiness_index.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -273,7 +273,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(WHIScore);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsWHIScore, " Score", WHIScore);
+            fillData(valsWHIScore, "3", WHIScore);
         }
     });
     createVariables(WHIScore, valsWHIScore);
@@ -293,7 +293,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
     //Daten auslesen - WHI Life Expectancy
     $.ajax({
         type: "GET",
-        url: "world-happiness-index_COMBINED - Kopie2.csv",
+        url: "world_happiness_index.csv",
         dataType: "text",
         async: false,
         success: (res) => {
@@ -301,7 +301,7 @@ https://help.symantec.com/cs/DCS1.0/DCS1_0/v107680513_v99309261/Enabling-CORS?lo
             //console.log(WHILife);
             //je nach Abfrage werden Daten entsprechend angepasst
             
-            fillData(valsWHILife, " Life Expectancy", WHILife);
+            fillData(valsWHILife, "4", WHILife);
         }
     });
     createVariables(WHILife, valsWHILife);
